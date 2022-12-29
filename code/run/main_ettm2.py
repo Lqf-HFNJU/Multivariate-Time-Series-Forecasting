@@ -14,7 +14,12 @@ torch.manual_seed(fix_seed)
 np.random.seed(fix_seed)
 
 
-class MainETTm1(MainBasic):
+class MainETTm2(MainBasic):
+
+    def init_param(self):
+        self.H = [96, 192, 336, 720]
+        self.batch_size = [32, 32, 32, 32]
+        self.lr = 0.001
 
     def start(self, args, batch_size: int, pred_len: int, lr: float):
         self.init_path()
@@ -43,7 +48,4 @@ class MainETTm1(MainBasic):
 
 
 if __name__ == '__main__':
-    H = [96, 192, 336, 720]
-    batch_size = [32, 32, 32, 32]
-    lr = 0.001
-    MainETTm1(H, batch_size, lr).main()
+    MainETTm2().main()

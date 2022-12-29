@@ -16,6 +16,11 @@ np.random.seed(fix_seed)
 
 class MainETTm1(MainBasic):
 
+    def init_param(self):
+        self.H = [96, 192, 336, 720]
+        self.batch_size = [8, 8, 8, 8]
+        self.lr = 0.0001
+
     def start(self, args, batch_size: int, pred_len: int, lr: float):
         self.init_path()
         seq_len = 336
@@ -43,7 +48,4 @@ class MainETTm1(MainBasic):
 
 
 if __name__ == '__main__':
-    H = [96, 192, 336, 720]
-    batch_size = [8, 8, 8, 8]
-    lr = 0.0001
-    MainETTm1(H, batch_size, lr).main()
+    MainETTm1().main()

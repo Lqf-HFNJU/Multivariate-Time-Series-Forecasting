@@ -16,6 +16,11 @@ np.random.seed(fix_seed)
 
 class MainIll(MainBasic):
 
+    def init_param(self):
+        self.H = [24, 36, 48, 60]
+        self.batch_size = [32, 32, 32, 32]
+        self.lr = 0.01
+
     def start(self, args, batch_size: int, pred_len: int, lr: float):
         self.init_path()
         seq_len = 104
@@ -43,7 +48,4 @@ class MainIll(MainBasic):
 
 
 if __name__ == '__main__':
-    H = [24, 36, 48, 60]
-    batch_size = [32, 32, 32, 32]
-    lr = 0.01
-    MainIll(H, batch_size, lr).main()
+    MainIll().main()

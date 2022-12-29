@@ -13,6 +13,11 @@ np.random.seed(fix_seed)
 
 
 class MainElectricity(MainBasic):
+    def init_param(self):
+        self.H = [96, 192, 336, 720]
+        self.batch_size = [16, 16, 16, 16]
+        self.lr = 0.001
+
     def start(self, args, batch_size: int, pred_len: int, lr: float):
         self.init_path()
         seq_len = 336
@@ -40,7 +45,4 @@ class MainElectricity(MainBasic):
 
 
 if __name__ == '__main__':
-    H = [96, 192, 336, 720]
-    batch_size = [16, 16, 16, 16]
-    lr = 0.001
-    MainElectricity(H, batch_size, lr).main()
+    MainElectricity().main()

@@ -7,10 +7,11 @@ from exp.exp_main import Exp_Main
 
 
 class MainBasic(object):
-    def __init__(self, H: list, batch_size: list, lr: float):
-        self.H = H
-        self.batch_size = batch_size
-        self.lr = lr
+    def __init__(self):
+        self.H = None
+        self.batch_size = None
+        self.lr = None
+        self.init_param()
 
     def get_args(self):
         parser = argparse.ArgumentParser(description='Autoformer & Transformer family for Time Series Forecasting')
@@ -151,3 +152,6 @@ class MainBasic(object):
             args = self.start(args, self.batch_size[i], self.H[i], self.lr)
             print(args)
             self.main_train(args)
+
+    def init_param(self):
+        raise NotImplementedError
