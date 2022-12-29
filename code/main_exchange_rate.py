@@ -94,7 +94,7 @@ def get_args():
         args.gpu = args.device_ids[0]
 
     print('Args in experiment:')
-    print(args)
+    # print(args)
     return args
 
 
@@ -135,31 +135,42 @@ def main_train(args):
             torch.cuda.empty_cache()
 
 
-def start(args):
+def start(args, batch_size: int, pred_len: int):
     if not os.path.exists('./logs'):
         os.mkdir('./logs')
     if not os.path.exists('./logs/LongForecasting'):
         os.mkdir('./logs/LongForecasting')
     seq_len = 336
-    model_name = 'Linear'
+    model_name = 'TCNLinear'
+
+    """
+        >logs/LongForecasting/$model_name'_'Exchange_$seq_len'_'96.log 
+    """
 
     args.is_training = 1
     args.root_path = './dataset/'
     args.data_path = 'exchange_rate.csv'
-    args.model_id = 'Exchange_' + str(seq_len) + '_96'
+    args.model_id = 'Exchange_' + str(seq_len) + '_' + str(pred_len)
     args.model = model_name
     args.data = 'custom'
     args.features = 'M'
     args.seq_len = seq_len
+    args.pred_len = pred_len
     args.enc_in = 8
     args.des = 'Exp'
     args.itr = 1
-    args.batch_size = 8
+    args.batch_size = batch_size
     args.learning_rate = 0.0005
     return args
 
 
 if __name__ == '__main__':
     args = get_args()
-    start(args)
-    main_train(args)
+    H = [96, 192, 336, 720]
+    batch_size = [8, 8, 32, 32]
+    for i in range(len(H)):
+        print("\n\n\n\n ----------------------new EXP:----------------------\n\tH = {}, batch_size = {}\n"
+              .format(H[i], batch_size[i]))
+        args = start(args, batch_size[i], H[i])
+        print(args)
+        main_train(args)

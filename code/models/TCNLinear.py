@@ -114,8 +114,9 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.seq_len = configs.seq_len
         self.pred_len = configs.pred_len
+        self.enc_in = configs.enc_in
 
-        self.TCN = TemporalConvNet(self.seq_len, [self.seq_len, self.seq_len])
+        self.TCN = TemporalConvNet(self.enc_in, [self.enc_in, self.enc_in, self.enc_in, self.enc_in])
 
         # Use this line if you want to visualize the weights
         # self.Linear.weight = nn.Parameter((1/self.seq_len)*torch.ones([self.pred_len,self.seq_len]))
