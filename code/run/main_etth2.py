@@ -34,8 +34,7 @@ class MainETTh2(MainBasic):
         args.root_path = './dataset/'
         args.data_path = 'ETTh2.csv'
         args.model_id = 'ETTh2_' + str(seq_len) + '_' + str(pred_len)
-        args.model = model_name
-        args.data = 'custom'
+        args.data = 'ETTh2'
         args.features = 'M'
         args.seq_len = seq_len
         args.pred_len = pred_len

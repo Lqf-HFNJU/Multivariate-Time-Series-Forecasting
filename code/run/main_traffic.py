@@ -34,7 +34,6 @@ class MainTraffic(MainBasic):
         args.root_path = './dataset/'
         args.data_path = 'traffic.csv'
         args.model_id = 'traffic_' + str(seq_len) + '_' + str(pred_len)
-        args.model = model_name
         args.data = 'custom'
         args.features = 'M'
         args.seq_len = seq_len
