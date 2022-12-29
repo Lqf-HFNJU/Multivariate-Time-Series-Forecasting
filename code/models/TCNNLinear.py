@@ -133,6 +133,8 @@ class Model(nn.Module):
     def forward(self, x):
         # 多做一下归一化的操作
         # x: [Batch, Input length, Channel]
+        seq_last = x[:, -1:, :].detach()
+        x = x - seq_last
         if self.individual:
             output = torch.zeros([x.size(0), self.pred_len, x.size(2)], dtype=x.dtype).to(x.device)
             for i in range(self.channels):
@@ -142,4 +144,5 @@ class Model(nn.Module):
             x = self.Front_TCN(x.permute(0, 2, 1))
             x = self.Linear(x)
             x = self.Back_TCN(x).permute(0, 2, 1)
+        x = x + seq_last
         return x  # [Batch, Output length, Channel]
