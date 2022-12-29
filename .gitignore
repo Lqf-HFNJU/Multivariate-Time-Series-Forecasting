@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.gitignore
+.idea
+/code/dataset/
+/code/checkpoints/
+/code/logs/
+/code/results/
