@@ -116,7 +116,8 @@ class Model(nn.Module):
         self.pred_len = configs.pred_len
         self.enc_in = configs.enc_in
 
-        self.TCN = TemporalConvNet(self.enc_in, [self.enc_in, self.enc_in, self.enc_in, self.enc_in])
+        self.Front_TCN = TemporalConvNet(self.enc_in, [self.enc_in // 2])
+        self.Back_TCN = TemporalConvNet(self.enc_in // 2, [self.enc_in])
 
         # Use this line if you want to visualize the weights
         # self.Linear.weight = nn.Parameter((1/self.seq_len)*torch.ones([self.pred_len,self.seq_len]))
@@ -140,7 +141,8 @@ class Model(nn.Module):
                 output[:, :, i] = self.Linear[i](x[:, :, i])
             x = output
         else:  # TODO 这里加上TCN操作
-            x = self.TCN(x.permute(0, 2, 1))
-            x = self.Linear(x).permute(0, 2, 1)
+            x = self.Front_TCN(x.permute(0, 2, 1))
+            x = self.Linear(x)
+            x = self.Back_TCN(x).permute(0, 2, 1)
         x = x + seq_last
         return x  # [Batch, Output length, Channel]

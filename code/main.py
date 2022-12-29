@@ -26,13 +26,11 @@ data_dict = {
 }
 
 
-def train():
-    parser = argparse.ArgumentParser(description='choose a dataset')
-    parser.add_argument('--dataset_no', type=int, default=1, help='dataset_no')
-    args = parser.parse_args()
-
-    data_dict[args.dataset_no]().main()
+def train(i: int):
+    print(data_dict[i].__name__)
+    data_dict[i]().main()
 
 
 if __name__ == '__main__':
-    train()
+    i = 9
+    train(i)
