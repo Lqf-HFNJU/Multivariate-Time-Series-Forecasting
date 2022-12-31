@@ -39,7 +39,7 @@ class MainBasic(object):
         parser.add_argument('--pred_len', type=int, default=96, help='prediction sequence length')
 
         # DLinear
-        parser.add_argument('--individual', action='store_true', default=False,
+        parser.add_argument('--individual', type=bool, default=False,
                             help='DLinear: a linear layer for each variate(channel) individually')
         # Formers
         parser.add_argument('--embed_type', type=int, default=0,

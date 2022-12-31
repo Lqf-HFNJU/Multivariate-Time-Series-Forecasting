@@ -1,6 +1,3 @@
-import argparse
-import os
-
 import torch
 import random
 import numpy as np
@@ -32,5 +29,5 @@ def train(i: int):
 
 
 if __name__ == '__main__':
-    i = 5
+    i = 9
     train(i)
