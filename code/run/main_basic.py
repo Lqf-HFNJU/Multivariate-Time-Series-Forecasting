@@ -19,7 +19,7 @@ class MainBasic(object):
         # basic config
         parser.add_argument('--is_training', type=int, default=1, help='status')
         parser.add_argument('--model_id', type=str, default='test', help='model id')
-        parser.add_argument('--model', type=str, default='Autoformer',
+        parser.add_argument('--model', type=str, default='TCNLinear',
                             help='model name, options: [Autoformer, Informer, Transformer]')
 
         # data loader
