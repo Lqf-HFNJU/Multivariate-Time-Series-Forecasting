@@ -1,6 +1,6 @@
 from data_provider.data_factory import data_provider
 from exp.exp_basic import Exp_Basic
-from models import DLinear, Linear, NLinear, TCNNLinear, TCNLinear, DoubleLinear, STLinear
+from models import DLinear, Linear, NLinear, TCNNLinear, TCNLinear, DoubleLinear, STLinear, AddSTLinear
 from utils.tools import EarlyStopping, adjust_learning_rate, visual, test_params_flop
 from utils.metrics import metric
 
@@ -32,7 +32,8 @@ class Exp_Main(Exp_Basic):
             'TCNNLinear': TCNNLinear,
             'TCNLinear': TCNLinear,
             'DoubleLinear': DoubleLinear,
-            'STLinear': STLinear
+            'STLinear': STLinear,
+            'AddSTLinear': AddSTLinear,
         }
         model = model_dict[self.args.model].Model(self.args).float()
 

@@ -29,7 +29,7 @@ class MainIll(MainBasic):
         """
             >logs/LongForecasting/$model_name'_'traffic_$seq_len'_'96.log 
         """
-        args.model = model_name
+        #args.model = model_name
         args.is_training = 1
         args.root_path = './dataset/'
         args.data_path = 'national_illness.csv'
