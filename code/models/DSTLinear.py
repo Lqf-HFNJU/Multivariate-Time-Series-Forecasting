@@ -215,7 +215,7 @@ class Model(nn.Module):
         # temporal embeddings
         self.temporal_emb = nn.Linear(self.enc_in, self.temporal_emb_dim)  # 4->temporal_emb_dim
 
-        self.k = 0.005 * np.exp(self.seq_len / self.pred_len)
+        self.k = 0.25 * np.exp(self.seq_len / (self.pred_len * 4))
         # self.k = 0
 
     def forward(self, x, x_mark):
