@@ -70,7 +70,7 @@ class TemporalBlock(nn.Module):
 
 
 class TemporalConvNet(nn.Module):
-    def __init__(self, num_inputs, num_channels: list, kernel_size=2, dropout=0.2):
+    def __init__(self, num_inputs, num_channels: list, kernel_size=2, dropout=0.4):
         """
         TCN，目前paper给出的TCN结构很好的支持每个时刻为一个数的情况，即sequence结构，
         对于每个时刻为一个向量这种一维结构，勉强可以把向量拆成若干该时刻的输入通道，
@@ -113,8 +113,18 @@ class MLP(nn.Module):
         self.fc1 = nn.Conv2d(in_channels=input_dim, out_channels=hidden_dim, kernel_size=1, bias=True)
         self.fc2 = nn.Conv2d(in_channels=hidden_dim, out_channels=hidden_dim, kernel_size=1, bias=True)
         self.act = nn.ReLU()
-        self.drop = nn.Dropout(p=0.15)
+        self.drop = nn.Dropout(p=0.4)
 
+    def init_weights(self):
+        """
+        参数初始化
+
+        :return:
+        """
+        self.fc1.weight.data.normal_(0, 0.01)
+        self.fc2.weight.data.normal_(0, 0.01)
+        if self.downsample is not None:
+            self.downsample.weight.data.normal_(0, 0.01)
     def forward(self, input_data: torch.Tensor) -> torch.Tensor:
         """Feed forward of MLP.
 
@@ -125,6 +135,7 @@ class MLP(nn.Module):
             torch.Tensor: latent repr
         """
         hidden = self.fc2(self.drop(self.act(self.fc1(input_data))))  # MLP
+        # hidden = self.fc2(self.act(self.fc1(input_data)))  # MLP
         hidden = hidden + input_data  # residual
         return hidden
 
@@ -144,9 +155,9 @@ class Model(nn.Module):
         self.output_len = configs.pred_len
         self.num_layer = 1
 
-        self.temporal_emb_dim = 8
-        self.spatial_emb_dim = (self.enc_in * 3) // 4
-        self.embed_dim = 0
+        self.temporal_emb_dim = 4
+        self.spatial_emb_dim = 4
+        self.embed_dim = 4
 
         # spatial embeddings
         self.spatial_emb = nn.Linear(self.enc_in, self.spatial_emb_dim)  # enc_in->spatial_emb_dim
@@ -155,7 +166,7 @@ class Model(nn.Module):
         self.temporal_emb = nn.Linear(4, self.temporal_emb_dim)  # 4->temporal_emb_dim
 
         # TCN layer
-        # self.Front_TCN = TemporalConvNet(self.enc_in, [self.embed_dim])
+        self.Front_TCN = TemporalConvNet(self.enc_in, [self.embed_dim])
 
         # encoding embed_dim + temporal_emb_dim + temp_dim_diw + spatial_emb_dim
         self.hidden_dim = self.embed_dim + self.spatial_emb_dim + self.temporal_emb_dim
@@ -165,6 +176,19 @@ class Model(nn.Module):
 
         # regression
         self.regression_layer = nn.Linear(self.input_len, self.output_len)
+
+    #     self.initialize_weights()
+    #
+    # # 定义权值初始化
+    # def initialize_weights(self):
+    #     for m in self.modules():
+    #         if isinstance(m, nn.Conv2d):
+    #             torch.nn.init.xavier_normal_(m.weight.data)
+    #             if m.bias is not None:
+    #                 m.bias.data.zero_()
+    #         elif isinstance(m, nn.Linear):
+    #             torch.nn.init.normal_(m.weight.data, 0, 0.01)
+    #             m.bias.data.zero_()
 
     def forward(self, x: torch.Tensor, x_mark: torch.Tensor) -> torch.Tensor:
         """Feed forward of STLinear.
@@ -184,7 +208,7 @@ class Model(nn.Module):
 
         # time series embedding: TCN
         batch_size, _, dim = x.shape
-        #       x_residual = self.Front_TCN(x.permute(0, 2, 1))  # [batch, embed_dim, len]
+        x_residual = self.Front_TCN(x.permute(0, 2, 1))  # [batch, embed_dim, len]
 
         # enc_in->spatial_emb_dim
         node_emb = self.spatial_emb(x).permute(0, 2, 1)  # [batch, spatial_emb_dim, len]
@@ -192,8 +216,8 @@ class Model(nn.Module):
         tem_emb = self.temporal_emb(x_mark).permute(0, 2, 1)  # [batch, temporal_emb_dim, len]
 
         # concate all embeddings     hidden: [batch, hidden_dim, len, 1]
-        # hidden = torch.cat((x_residual, node_emb, tem_emb), dim=1).view(batch_size, self.hidden_dim, -1, 1)
-        hidden = torch.cat((node_emb, tem_emb), dim=1).view(batch_size, self.hidden_dim, -1, 1)
+        hidden = torch.cat((x_residual, node_emb, tem_emb), dim=1).view(batch_size, self.hidden_dim, -1, 1)
+        # hidden = torch.cat((node_emb, tem_emb), dim=1).view(batch_size, self.hidden_dim, -1, 1)
 
         # encoding
         hidden = self.encoder(hidden).view(batch_size, self.enc_in, -1)  # hidden: [batch, enc_in, len]

@@ -174,6 +174,15 @@ class Exp_Main(Exp_Basic):
                     outputs = outputs[:, -self.args.pred_len:, f_dim:]
                     batch_y = batch_y[:, -self.args.pred_len:, f_dim:].to(self.device)
                     loss = criterion(outputs, batch_y)
+
+                    # if 'STLinear' in self.args.model:
+                    #     reg_loss = 0
+                    #     cnt = 0
+                    #     for param in self.model.parameters():
+                    #         reg_loss += torch.sum(torch.abs(param))
+                    #         cnt += 1
+                    #     loss += 0.05 * (reg_loss/cnt)
+
                     train_loss.append(loss.item())
 
                 if (i + 1) % 100 == 0:
