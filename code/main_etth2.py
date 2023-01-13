@@ -24,12 +24,9 @@ class MainETTh2(MainBasic):
     def start(self, args, batch_size: int, pred_len: int, lr: float):
         self.init_path()
         seq_len = 336
-        model_name = 'TCNLinear'
+        model_name = 'DSTLinear'
 
-        """
-            >logs/LongForecasting/$model_name'_'ETTh1_$seq_len'_'96.log 
-        """
-
+        args.model = model_name
         args.is_training = 1
         args.root_path = './dataset/'
         args.data_path = 'ETTh2.csv'

@@ -24,12 +24,9 @@ class MainIll(MainBasic):
     def start(self, args, batch_size: int, pred_len: int, lr: float):
         self.init_path()
         seq_len = 104
-        model_name = 'STLinear'
+        model_name = 'DSTLinear'
 
-        """
-            >logs/LongForecasting/$model_name'_'traffic_$seq_len'_'96.log 
-        """
-        #args.model = model_name
+        args.model = model_name
         args.is_training = 1
         args.root_path = './dataset/'
         args.data_path = 'national_illness.csv'
