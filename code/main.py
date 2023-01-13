@@ -2,8 +2,15 @@ import torch
 import random
 import numpy as np
 
-from run import main_etth1, main_etth2, main_ettm1, main_ettm2, main_ill, main_electricity, main_exchange_rate, \
-    main_traffic, main_weather
+import main_etth1
+import main_ettm1
+import main_exchange_rate
+import main_weather
+import main_traffic
+import main_etth2
+import main_ettm2
+import main_ill
+import main_electricity
 
 fix_seed = 2021
 random.seed(fix_seed)
@@ -29,5 +36,5 @@ def train(i: int):
 
 
 if __name__ == '__main__':
-    i = 1
+    i = 9
     train(i)
