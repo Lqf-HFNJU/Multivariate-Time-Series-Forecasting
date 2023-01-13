@@ -29,5 +29,5 @@ def train(i: int):
 
 
 if __name__ == '__main__':
-    i = 4
+    i = 1
     train(i)

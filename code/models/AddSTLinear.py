@@ -211,7 +211,7 @@ class Model(nn.Module):
         batch_size, _, dim = x.shape
 
         # enc_in->spatial_emb_dim
-        node_emb = self.spatial_emb(x).permute(0, 2, 1)  # [batch, spatial_emb_dim, len]
+        # node_emb = self.spatial_emb(x).permute(0, 2, 1)  # [batch, spatial_emb_dim, len]
         # temporal embeddings
         # tem_emb = self.temporal_emb(x_mark).permute(0, 2, 1)  # [batch, temporal_emb_dim, len]
 
@@ -221,10 +221,9 @@ class Model(nn.Module):
         # hidden = self.encoder(x_residual + node_emb + tem_emb)
 
         x_residual = self.Front_TCN(x.permute(0, 2, 1))  # [batch, embed_dim, len]
-
         # regression
         # output = self.regression_layer(x.permute(0, 2, 1) + node_emb + tem_emb).permute(0, 2, 1)
-        output = self.regression_layer(x.permute(0, 2, 1) + node_emb + x_residual).permute(0, 2, 1)
+        output = self.regression_layer(x.permute(0, 2, 1) + x_residual).permute(0, 2, 1)
         # output = output + seq_last
         return output
 
