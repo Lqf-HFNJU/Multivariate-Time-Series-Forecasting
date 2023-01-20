@@ -213,12 +213,12 @@ class Model(nn.Module):
         self.drop = nn.Dropout(p=0.5)
 
         # temporal embeddings
-        self.temporal_emb = nn.Linear(self.enc_in, self.temporal_emb_dim)  # 4->temporal_emb_dim
+        # self.temporal_emb = nn.Linear(self.enc_in, self.temporal_emb_dim)  # 4->temporal_emb_dim
 
         self.k = 0.25 * np.exp(self.seq_len / (self.pred_len * 4))
         # self.k = 0
 
-    def forward(self, x, x_mark):
+    def forward(self, x, x_mark=None):
         # x: [Batch, Input length, Channel]
         seasonal_init, trend_init = self.decomposition(x)
         seasonal_init, trend_init = seasonal_init.permute(0, 2, 1), trend_init.permute(0, 2, 1)
@@ -244,10 +244,10 @@ if __name__ == '__main__':
 
     # (32,104,7)
 
-    x = torch.randn(32, 104, 7)
-    x_mark = torch.randn(32, 104, 4)
-    arg = cmd(7, 104, 24)
+    x = torch.randn(16, 96, 862)
+    x_mark = torch.randn(16, 96, 4)
+    arg = cmd(862, 96, 720)
     model = Model(arg)
 
-    y = model(x, x_mark)  # (32,24,7)
+    y = model(x, x_mark)  # (16, 720, 862)
     print(y.shape)
